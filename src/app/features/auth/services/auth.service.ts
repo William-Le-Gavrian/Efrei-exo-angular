@@ -8,6 +8,7 @@ export class AuthService {
   private users = signal<User[]>([
     {
       id: 1,
+      name: 'bonjour',
       email: 'admin@example.com',
       password: 'admin123', // En production, ce serait hashé
       role: 'admin',
@@ -15,6 +16,7 @@ export class AuthService {
     },
     {
       id: 2,
+      name: 'bonjour',
       email: 'user@example.com',
       password: 'user123',
       role: 'user',
@@ -22,7 +24,7 @@ export class AuthService {
     },
   ]);
 
-  private currentUser = signal<User | null>(null);
+  public currentUser = signal<User | null>(null);
 
   // Simuler un délai réseau
   private delay(ms: number): Promise<void> {
@@ -71,6 +73,7 @@ export class AuthService {
 
     const newUser: User = {
       id: Date.now(),
+      name: 'bonjour',
       email: userData.email,
       password: userData.password,
       role: 'user',
