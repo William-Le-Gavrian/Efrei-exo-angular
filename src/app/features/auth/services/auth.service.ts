@@ -73,7 +73,7 @@ export class AuthService {
 
     const newUser: User = {
       id: Date.now(),
-      name: 'bonjour',
+      name: userData.name,
       email: userData.email,
       password: userData.password,
       role: 'user',
@@ -124,5 +124,13 @@ export class AuthService {
       ...user,
       password: '***', // Masquer les mots de passe
     }));
+  }
+
+  async deleteUser(userId: number): Promise<boolean> {
+    console.log("🔄 Service: Supression de l'utilisateur");
+
+    this.users.update((users) => users.filter((user: User) => user.id !== userId));
+    console.log('✅ Service: Utilisateur supprimé');
+    return true;
   }
 }
