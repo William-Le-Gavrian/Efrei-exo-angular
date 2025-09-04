@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Todo } from '../models/todo.model';
 import { TodoService } from '../services/todo.service';
 import { HighlightDirective } from '../../../shared/directives/highlights.directive';
+import { PriorityPipe } from '../../../shared/pipes/priority.pipe';
 
 @Component({
   selector: 'app-todo-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HighlightDirective],
+  imports: [CommonModule, FormsModule, HighlightDirective, PriorityPipe],
   template: `
     <!-- Dashboard des statistiques -->
     <div class="mb-8">
@@ -112,7 +113,7 @@ import { HighlightDirective } from '../../../shared/directives/highlights.direct
                   [class.bg-green-100]="todo.priority === 'low'"
                   [class.text-green-800]="todo.priority === 'low'"
                 >
-                  {{ todo.priority }}
+                  {{ todo.priority | priority }}
                 </span>
               </div>
               @if (todo.description) {
@@ -156,7 +157,7 @@ import { HighlightDirective } from '../../../shared/directives/highlights.direct
                   [class.bg-green-100]="todo.priority === 'low'"
                   [class.text-green-800]="todo.priority === 'low'"
                 >
-                  {{ todo.priority }}
+                  {{ todo.priority | priority }}
                 </span>
               </div>
               @if (todo.description) {
@@ -200,7 +201,7 @@ import { HighlightDirective } from '../../../shared/directives/highlights.direct
                   [class.bg-green-100]="todo.priority === 'low'"
                   [class.text-green-800]="todo.priority === 'low'"
                 >
-                  {{ todo.priority }}
+                  {{ todo.priority | priority }}
                 </span>
               </div>
               @if (todo.description) {
