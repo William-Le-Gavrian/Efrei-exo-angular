@@ -5,7 +5,7 @@ import { User, LoginRequest, RegisterRequest } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private users = signal<User[]>([
+  private defaultUsers = signal<User[]>([
     {
       id: 1,
       name: 'bonjour',
@@ -24,7 +24,19 @@ export class AuthService {
     },
   ]);
 
+  // Mock data - mots de passe (en réalité, ils seraient hashés)
+  private defaultPasswords: Record<string, string> = {
+    'admin@example.com': 'admin123',
+    'user@example.com': 'user123',
+  };
+
   public currentUser = signal<User | null>(null);
+  private users = signal<User[]>(this.defaultUsers());
+  private passwords: Record<string, string> = { ...this.defaultPasswords };
+
+  constructor() {
+    this.loadUsersFromStorage();
+  }
 
   // Simuler un délai réseau
   private delay(ms: number): Promise<void> {
@@ -81,7 +93,10 @@ export class AuthService {
     };
 
     this.users.update((users) => [...users, newUser]);
+    this.passwords[newUser.email] = newUser.password;
     this.currentUser.set(newUser);
+
+    this.saveUsersToStorage();
 
     console.log('✅ Service: Inscription réussie pour:', newUser.email);
     return { success: true, user: newUser };
@@ -132,5 +147,29 @@ export class AuthService {
     this.users.update((users) => users.filter((user: User) => user.id !== userId));
     console.log('✅ Service: Utilisateur supprimé');
     return true;
+  }
+
+  private saveUsersToStorage() {
+    localStorage.setItem('users', JSON.stringify(this.users()));
+    localStorage.setItem('usersPasswords', JSON.stringify(this.passwords));
+  }
+
+  private loadUsersFromStorage() {
+    const savedUsers = localStorage.getItem('users');
+    const savedPasswords = localStorage.getItem('usersPasswords');
+
+    if (savedUsers && savedPasswords) {
+      this.users.set(JSON.parse(savedUsers));
+      this.passwords = JSON.parse(savedPasswords);
+    }
+  }
+
+  private clearAllUsersData() {
+    localStorage.removeItem('users');
+    localStorage.removeItem('usersPasswords');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+
+    this.loadUsersFromStorage();
   }
 }
